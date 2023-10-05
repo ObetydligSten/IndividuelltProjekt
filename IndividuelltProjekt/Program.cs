@@ -92,7 +92,7 @@
             while (menu)
             {
                 Console.Clear();
-                Console.WriteLine("Inloggad som " + LoggedInUser);
+                Console.WriteLine("Inloggad som " + LoggedInUser + "\n");
                 Console.WriteLine("[1] Se dina konton och saldo");
                 Console.WriteLine("[2] Överföring mellan konton");
                 Console.WriteLine("[3] Ta ut pengar");
@@ -171,7 +171,7 @@
                                 {
                                     Console.WriteLine($"\nÖverför pengar från {accountFrom} till {accountTo}. \nHur mycket vill du överföra?");
                                     Double.TryParse(Console.ReadLine(), out double transfer);
-                                    if (transfer > 0 && (rasmusASum[i] - transfer) > 0 && (rasmusASum[j] + transfer) > 0)
+                                    if (transfer > 0 && (rasmusASum[i] - transfer) >= 0 && (rasmusASum[j] + transfer) >= 0)
                                     {
                                         rasmusASum[i] -= transfer;
                                         rasmusASum[j] += transfer;
@@ -183,15 +183,18 @@
                                     {
                                         Console.WriteLine("Kan inte överföra en negativ summa");
                                         Console.ReadKey();
+                                        Menu();
                                     }
                                     else if ((rasmusASum[i] - transfer) < 0)
                                     {
                                         Console.WriteLine("Kan inte överföra mer pengar än det finns på kontot");
                                         Console.ReadKey();
+                                        Menu();
                                     }
                                     else
                                     {
                                         Console.WriteLine("OBS! Någon gick fel, vänlig försök igen. . .");
+                                        Console.ReadKey();
                                         Menu();
                                     }
                                     
@@ -201,19 +204,17 @@
                                 {
                                     Console.WriteLine("Kan inte vara samma konto, välj olika konton. . .");
                                     Console.ReadKey();
+                                    Menu();
                                 }
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Kontot hittades inte, försök igen. . .");
-                            Console.ReadKey();
-                        }
+                        }                        
                     }
+                    Console.WriteLine("Kontot hittades inte, försök igen. . .");
+                    Console.ReadKey();
+                    Menu();
 
 
 
-                    
                 }
                 else if (menuChoiceCheck == 3)
                 {
@@ -232,20 +233,36 @@
                             Console.WriteLine("Hur mycket pengar vill du ta ut?");
                             Double.TryParse(Console.ReadLine(), out double transfer);
 
-                            if (transfer > 0 && (rasmusASum[i] - transfer) > 0)
+                            if (transfer > 0 && (rasmusASum[i] - transfer) >= 0)
                             {
                                 rasmusASum[i] -= transfer;
                                 Console.WriteLine("Uttag klart, Tryck ENTER för att gå tillbaka till menyn");
                                 Console.ReadKey();
                                 Menu();
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Hittar inget konto med det namnet, försök igen. . .");
-                            Console.ReadKey();
-                        }
+                            else if (transfer < 0)
+                            {
+                                Console.WriteLine("Kan inte överföra en negativ summa");
+                                Console.ReadKey();
+                                Menu();
+                            }
+                            else if ((rasmusASum[i] - transfer) < 0)
+                            {
+                                Console.WriteLine("Kan inte överföra mer pengar än det finns på kontot");
+                                Console.ReadKey();
+                                Menu();
+                            }
+                            else
+                            {
+                                Console.WriteLine("OBS! Någon gick fel, vänlig försök igen. . .");
+                                Console.ReadKey();
+                                Menu();
+                            }
+                        }                       
                     }
+                    Console.WriteLine("Hittar inget konto med det namnet, försök igen. . .");
+                    Console.ReadKey();
+                    Menu();
                 }
                     
 
