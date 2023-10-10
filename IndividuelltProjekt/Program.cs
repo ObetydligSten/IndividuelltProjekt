@@ -2,8 +2,9 @@
 {
     internal class Program
     {       
-        //För att håll koll på vem som är inloggad finns denna globala variabel.
+        //För att håll koll på vem som är inloggad finns dessa globala variabler. En för Namn och en kör kod.
         static string LoggedInUser = null;
+        static int LoggedInCode = 0;
 
         //Dessa ligger som globala variablar så inte summan i kontona ska reseta när man kollar sitt konto.
         static string[] rasmusAName = new string[3] { "Sparkonto", "Lönekonto", "Resekonto" };
@@ -29,8 +30,7 @@
 
         //Metod för inloggning
         static void Login()
-        {
-            Console.WriteLine("Välkommen till banken!\n");
+        {            
 
             //användare och deras pinkod ligger i arrayer.
             string[] users = new string[5] { "Rasmus", "Ben", "Sten", "Kurt", "Sven" };
@@ -41,6 +41,7 @@
             for (int i = 3; i > 0;)
             {
                 Console.Clear();
+                Console.WriteLine("Välkommen till banken!\n");
                 Console.Write("Ange användarnamn: ");
                 var username = Console.ReadLine();
                 Console.Write("Ange pinkod: ");
@@ -56,6 +57,7 @@
                             Console.WriteLine($"Inloggning lyckades: Välkommen {username}!");
                             Console.ReadKey();
                             LoggedInUser = username;
+                            LoggedInCode = code;
                             userFound = true;
                             Menu();
                             break;
@@ -175,7 +177,8 @@
                                     {
                                         rasmusASum[i] -= transfer;
                                         rasmusASum[j] += transfer;
-                                        Console.WriteLine("Överföring klar, tryck ENTER för att gå tillbaka till menyn ");
+                                        Console.WriteLine($"Överföring klar, nytt saldo är: \n\n{rasmusAName[i]}: {rasmusASum[i]} SEK" +
+                                            $"\n{rasmusAName[j]}: {rasmusASum[j]} SEK\n\nTryck ENTER för att gå tillbaka till menyn ");
                                         Console.ReadKey();                                       
                                         Menu();
                                     }
@@ -232,32 +235,50 @@
                         {
                             Console.WriteLine("Hur mycket pengar vill du ta ut?");
                             Double.TryParse(Console.ReadLine(), out double transfer);
+                            Console.WriteLine("Skriv in din pinkod för att bekräfta uttaget");
+                            if (Int32.TryParse(Console.ReadLine(), out int codeCheck))
+                            {
+                                if (transfer > 0 && (rasmusASum[i] - transfer) >= 0 && codeCheck == LoggedInCode)
+                                {
+                                    rasmusASum[i] -= transfer;
+                                    Console.WriteLine($"Uttag klart, nya saldot är \n\n{rasmusAName[i]}: {rasmusASum[i]} SEK" +
+                                        $"\n\nTryck ENTER för att gå tillbaka till menyn");
+                                    Console.ReadKey();
+                                    Menu();
+                                }
+                                else if (transfer < 0)
+                                {
+                                    Console.WriteLine("Kan inte överföra en negativ summa");
+                                    Console.ReadKey();
+                                    Menu();
+                                }
+                                else if ((rasmusASum[i] - transfer) < 0)
+                                {
+                                    Console.WriteLine("Kan inte överföra mer pengar än det finns på kontot");
+                                    Console.ReadKey();
+                                    Menu();
+                                }
+                                else if (codeCheck != LoggedInCode)
+                                {
+                                    Console.WriteLine("OBS, Fel pinkod, försök igen");
+                                    Console.ReadKey();
+                                    Menu();
+                                }
+                                else
+                                {
+                                    Console.WriteLine("OBS! Någon gick fel, vänlig försök igen. . .");
+                                    Console.ReadKey();
+                                    Menu();
+                                }
+                            }
+                            else 
+                            {
+                                Console.WriteLine("OBS, Fyrsiffrig kod, försök igen");
+                                Console.ReadKey();
+                                Menu();
+                            }
 
-                            if (transfer > 0 && (rasmusASum[i] - transfer) >= 0)
-                            {
-                                rasmusASum[i] -= transfer;
-                                Console.WriteLine("Uttag klart, Tryck ENTER för att gå tillbaka till menyn");
-                                Console.ReadKey();
-                                Menu();
-                            }
-                            else if (transfer < 0)
-                            {
-                                Console.WriteLine("Kan inte överföra en negativ summa");
-                                Console.ReadKey();
-                                Menu();
-                            }
-                            else if ((rasmusASum[i] - transfer) < 0)
-                            {
-                                Console.WriteLine("Kan inte överföra mer pengar än det finns på kontot");
-                                Console.ReadKey();
-                                Menu();
-                            }
-                            else
-                            {
-                                Console.WriteLine("OBS! Någon gick fel, vänlig försök igen. . .");
-                                Console.ReadKey();
-                                Menu();
-                            }
+                           
                         }                       
                     }
                     Console.WriteLine("Hittar inget konto med det namnet, försök igen. . .");
