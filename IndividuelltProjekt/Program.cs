@@ -30,8 +30,7 @@
 
         //Metod för inloggning
         static void Login()
-        {            
-
+        {
             //användare och deras pinkod ligger i arrayer.
             string[] users = new string[5] { "Rasmus", "Ben", "Sten", "Kurt", "Sven" };
             int[] passcode = new int[5] { 2345, 1234, 9999, 6677, 9090 };
@@ -90,53 +89,62 @@
         //Metod för menyn
         static void Menu()
         {
-            bool menu = true;
-            while (menu)
+            if (LoggedInUser == "Rasmus" || LoggedInUser == "Ben" || LoggedInUser == "Sten" || LoggedInUser == "Kurt" || LoggedInUser == "Sven")
             {
-                Console.Clear();
-                Console.WriteLine("Inloggad som " + LoggedInUser + "\n");
-                Console.WriteLine("[1] Se dina konton och saldo");
-                Console.WriteLine("[2] Överföring mellan konton");
-                Console.WriteLine("[3] Ta ut pengar");
-                Console.WriteLine("[4] Logga ut");
-                if (Int32.TryParse(Console.ReadLine(), out int menuChoice))
+                bool menu = true;
+                while (menu)
                 {
-                    //Varje case skickar till accounts metoden vem som är inloggad och vilket menyval som gjordes.
-                    switch (menuChoice)
+                    Console.Clear();
+                    Console.WriteLine("Inloggad som " + LoggedInUser + "\n");
+                    Console.WriteLine("[1] Se dina konton och saldo");
+                    Console.WriteLine("[2] Överföring mellan konton");
+                    Console.WriteLine("[3] Ta ut pengar");
+                    Console.WriteLine("[4] Logga ut");
+                    if (Int32.TryParse(Console.ReadLine(), out int menuChoice))
                     {
-                        case 1:
-                            Console.Clear();
-                            Console.WriteLine("Inloggad som " + LoggedInUser);
-                            Accounts(LoggedInUser, menuChoice);
-                            break;
-                        case 2:
-                            Console.Clear();
-                            Console.WriteLine("Inloggad som " + LoggedInUser);
-                            Accounts(LoggedInUser, menuChoice);
-                            break;
-                        case 3:
-                            Console.Clear();
-                            Console.WriteLine("Inloggad som " + LoggedInUser);
-                            Accounts(LoggedInUser, menuChoice);
-                            break;
-                        case 4:
-                            Console.WriteLine("Du loggas ut. . .");
-                            Console.ReadKey();
-                            Login();
-                            break;
-                        default:
-                            Console.WriteLine("Ogiltigt val, skriv in en siffra [1-4]. . .");
-                            Console.ReadKey();
-                            break;
+                        //Varje case skickar till accounts metoden vem som är inloggad och vilket menyval som gjordes.
+                        switch (menuChoice)
+                        {
+                            case 1:
+                                Console.Clear();
+                                Console.WriteLine("Inloggad som " + LoggedInUser);
+                                Accounts(LoggedInUser, menuChoice);
+                                break;
+                            case 2:
+                                Console.Clear();
+                                Console.WriteLine("Inloggad som " + LoggedInUser);
+                                Accounts(LoggedInUser, menuChoice);
+                                break;
+                            case 3:
+                                Console.Clear();
+                                Console.WriteLine("Inloggad som " + LoggedInUser);
+                                Accounts(LoggedInUser, menuChoice);
+                                break;
+                            case 4:
+                                Console.WriteLine("Du loggas ut. . .");
+                                Console.ReadKey();
+                                LoggedInUser = null;
+                                Login();
+                                if (LoggedInUser == null)
+                                {
+                                    menu = false;
+                                }
+                                break;
+                            default:
+                                Console.WriteLine("Ogiltigt val, skriv in en siffra [1-4]. . .");
+                                Console.ReadKey();
+                                break;
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine("Ogiltigt val, skriv in en siffra. . .");
+                        Console.ReadKey();
+                    }
+
                 }
-                else
-                {
-                    Console.WriteLine("Ogiltigt val, skriv in en siffra. . .");
-                    Console.ReadKey();
-                }
-                   
             }
+
         }
 
         //En metod som behandlar alla konton.
